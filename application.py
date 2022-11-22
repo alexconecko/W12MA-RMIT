@@ -7,7 +7,7 @@ class Application:
         self.__backend = backend.BackEndManager()
         self.__backend.data_file = ""
         self.__frontend = frontend.FrontEndUI(self.__backend)
-        sys.stdout.write("About to start program...")
+        sys.stdout.write("About to start program...\n")
         self.__frontend.show_ui()
         
 app = Application()
