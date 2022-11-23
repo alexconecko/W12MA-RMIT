@@ -2,28 +2,15 @@
 class BackEndManager:
     graphics_cards_inventory = []
     
-    def load_data_from_file(self, file_name:str)->str:
-        try:
-            data_file = open(file_name, "r")
-        except:
-            raise ValueError("Unable to open file: " + file_name)
-
-        line = data_file.readline()
-        while line != "":
-            fields = line.strip().split(",")
-            if len(fields) != 3:
-                raise ValueError("Incorrect number of values on line: " + line)
-
-            try:
-                card_name = fields[0]
-                stock_amount = fields[1]
-                card_price = fields[2]
-            except:
-                raise ValueError("Incorrectly formatted fata line in file: " + line)
+    @staticmethod
+    def add_card(card_name, stock_amount, card_price):
+        gpu_item = GraphicsCard(card_name, stock_amount, card_price)
+        gpu_item.card_name = card_name
+        gpu_item.stock_amount = stock_amount
+        gpu_item.card_price = card_price
+        BackEndManager.graphics_cards_inventory.append(gpu_item)
             
-        
-            
-class Graphics_Card():
+class GraphicsCard():
     __card_name = ""
     __stock_amount = 0
     __card_price = 0.00
