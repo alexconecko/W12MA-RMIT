@@ -9,9 +9,8 @@ class BackEndManager:
         gpu_item.card_name = card_name
         gpu_item.stock_amount = stock_amount
         gpu_item.card_price = card_price
-        BackEndManager.graphics_cards_inventory.append(gpu_item)
-    
-        
+        BackEndManager.graphics_cards_inventory.append(gpu_item)            
+            
             
 class GraphicsCard():
     __card_name = ""
