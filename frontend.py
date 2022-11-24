@@ -8,9 +8,6 @@ class FrontEndUI():
     def __init__(self, __backend):
         self.__backend = backend.BackEndManager()
         self.data_file = backend.BackEndManager.data_file
-        
-        try:
-            self.__backend.load
        
     def show_ui(self):
         #try and except was not used here as I wanted there to only be 
