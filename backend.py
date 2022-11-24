@@ -1,10 +1,7 @@
 
 class BackEndManager:
     graphics_cards_inventory = []
-    data_file = None
-    
-    def __init__(self):
-        self.data_file = BackEndManager.load_file(self, file_name="")
+    data_file = ""
         
     @staticmethod
     def add_card(card_name, stock_amount, card_price):
@@ -12,30 +9,8 @@ class BackEndManager:
         gpu_item.card_name = card_name
         gpu_item.stock_amount = stock_amount
         gpu_item.card_price = card_price
-        BackEndManager.graphics_cards_inventory.append(gpu_item)
-        
-    def load_file(self, file_name:str)->str:
-        
-        try:
-            BackEndManager.data_file = open(file_name, "r")
-            line = BackEndManager.data_file.readline().strip()
-            while line != "":
-                fields = line.strip().split(",")
-                if len(fields) != 3:
-                    raise ValueError("Incorrect number of values on line: " + str(line))
-                else:
-                    card_name = fields[0]
-                    stock_amount = fields[1]
-                    card_price = fields[2]
-                    BackEndManager.add_card(card_name, stock_amount, card_price)
-        except FileNotFoundError:
-            pass
+        BackEndManager.graphics_cards_inventory.append(gpu_item)            
             
-                
-            
-            
-    
-        
             
 class GraphicsCard():
     __card_name = ""

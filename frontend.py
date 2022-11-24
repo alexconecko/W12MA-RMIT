@@ -59,6 +59,23 @@ class FrontEndUI():
                 i += 1
         FrontEndUI.show_ui(self)
     
+    def load_file(self, file_name:str)->str:
+        
+        try:
+            backend.BackEndManager.data_file = open("", "r")
+            line = backend.BackEndManager.data_file.readline().strip()
+            while line != "":
+                fields = line.strip().split(",")
+                if len(fields) != 3:
+                    raise ValueError("Incorrect number of values on line: " + str(line))
+                else:
+                    card_name = fields[0]
+                    stock_amount = fields[1]
+                    card_price = fields[2]
+                    backend.BackEndManager.add_card(card_name, stock_amount, card_price)
+        except FileNotFoundError:
+            sys.stdout.write("File could not be found, a new file will be created.")
+            
 def get_str(prompt:str)->str:
     sys.stdout.write(prompt)
     sys.stdout.flush()
