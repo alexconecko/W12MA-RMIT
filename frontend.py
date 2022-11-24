@@ -2,18 +2,15 @@ import sys
 import backend
 
 class FrontEndUI():
+    data_file = None
     #constructor needs to be created with __frontend as a parameter
     #to avoid a TypeError due to an argument being passed when instantiating
     #the class within application.py
     def __init__(self, __backend):
         self.__backend = backend.BackEndManager()
+        self.__backend.data_file = FrontEndUI.load_data_from_file(self)        
         
     def show_ui(self):
-        try:
-            FrontEndUI.load_data_from_file(file_name=get_data_file())
-        except Exception as e:
-            sys.stdout.write(str(e))
-        
         menu = "\n\n===============================\n"
         menu += "Graphics Card Inventory Manager\n"
         menu += "===============================\n"
@@ -25,25 +22,22 @@ class FrontEndUI():
         
         menu = menu.lower()
         choice = get_str("Enter choice: ").lower()
+        if choice == "a":
+            FrontEndUI.add_item_via_menu(self)
+        elif choice == "d":
+            FrontEndUI.display_saved_data(self)
+    
         while not "[" + choice + "]" in menu:
             choice = get_str((choice + " was an invalid choice! Re-enter: ")).lower()
-                
-        while choice != "x":
-            sys.stdout.write("\n")
-            if choice == "a":
-                FrontEndUI.add_item_via_menu(self)
-           # elif choice == "d":
-              #  display_saved_data(self)
-            choice = FrontEndUI.show_ui(self)
-    
+        
     @classmethod
     def load_data_from_file(self, file_name:str)->str:
         try:
-            data_file = open(file_name, "r")
+            backend.BackEndManager.data_file = open(file_name, "r")
         except:
             raise ValueError("Unable to open file: " + file_name)
 
-        line = data_file.readline()
+        line = backend.BackEndManager.data_file.readline()
         while line != "":
             fields = line.strip().split(",")
             if len(fields) != 3:
@@ -69,11 +63,23 @@ class FrontEndUI():
         card_price = get_positive_float("Enter item price: $")
         sys.stdout.write("\n")
         backend.BackEndManager.add_card(card_name, stock_amount, card_price)
-    
-def get_data_file():
-    file_name = get_str("Enter name of file you'd like to load, if file is not found a new one will be created: ")
-    
-    return file_name
+        FrontEndUI.show_ui(self)
+        
+    def display_saved_data(self):
+        i = 0
+        record = ""
+        try:
+            while i < len(backend.BackEndManager.graphics_cards_inventory):
+                record = "\n" + str(backend.BackEndManager.graphics_cards_inventory[i].card_name) + " "
+                record += str(backend.BackEndManager.graphics_cards_inventory[i].stock_amount) + " "
+                record += str(backend.BackEndManager.graphics_cards_inventory[i].card_price) + "\n"
+                sys.stdout.write(str(record))
+                i += 1
+                FrontEndUI.show_ui(self)
+        except Exception as e:
+            sys.stdout.write(str(e))
+            FrontEndUI.show_ui(self)
+        
     
 def get_str(prompt:str)->str:
     sys.stdout.write(prompt)
@@ -127,4 +133,3 @@ def get_int(prompt:str)->str:
             prompt = "That wasn't right. Re-enter: "
     return value
     
-#TODO: implement auto load and menu option to load another file.
