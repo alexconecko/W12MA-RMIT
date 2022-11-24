@@ -5,22 +5,31 @@ class FrontEndUI():
     data_file = ""
     initial_load = True
         
-    def __init__(self, frontend):
-        self.__frontend = frontend
+    def __init__(self, __backend):
+        self.__backend = backend.BackEndManager()
         self.data_file = backend.BackEndManager.data_file
+        
+        try:
+            self.__backend.load
        
     def show_ui(self):
+        #try and except was not used here as I wanted there to only be 
+        #a single check for loading a file, instead we have try and except
+        #in the actual load file method. I had to do this because the application
+        #module makes call to show_ui and we also call it at the end of other 
+        #methods depending on user actions. I've done it this way because no messages
+        #other than "about to start program..." can be written out at program start
         if FrontEndUI.initial_load:
             FrontEndUI.load_file(self, file_name="")
             FrontEndUI.initial_load = False
 
               
-        menu = "\n=====================\n"
-        menu += "BurgerJoint POS system\n"
-        menu += "======================\n"
-        menu += "[A]dd an item\n"
+        menu = "\n===============================\n"
+        menu += "Graphics Card Inventory Manager\n"
+        menu += "===============================\n"
+        menu += "[A]dd a product\n"
         menu += "[D]isplay saved data\n"
-        menu += "E[x]it\n"
+        menu += "E[x]it and save to file\n"
         
         sys.stdout.write(menu)
         
@@ -36,7 +45,7 @@ class FrontEndUI():
             elif choice == "d":
                 FrontEndUI.display_records(self)
             else:
-                pass #add a save and exit function here
+                FrontEndUI.save_file(self)
                 
         
     def add_item_via_menu(self):
@@ -70,9 +79,10 @@ class FrontEndUI():
     def load_file(self, file_name:str)->str:
         file_name = backend.BackEndManager.data_file
         try:
-            backend.BackEndManager.data_file = open("test.csv", "r")
+            backend.BackEndManager.data_file = open(file_name, "r")
+            i = 0
             line = backend.BackEndManager.data_file.readline().strip()
-            while line != None:
+            while line != "":
                 fields = line.strip().split(",")
                 if len(fields) != 3:
                     raise ValueError("Incorrect number of values on line: " + str(line))
@@ -81,10 +91,15 @@ class FrontEndUI():
                     stock_amount = fields[1]
                     card_price = fields[2]
                     backend.BackEndManager.add_card(card_name, stock_amount, card_price)
-                    
+                line = backend.BackEndManager.data_file.readline().strip()
+                i += 1           
             backend.BackEndManager.data_file.close()
         except FileNotFoundError:
             sys.stdout.write("\nData file could not be found, a new file will be created.\n")
+            
+    def save_file(self, file_name):
+        pass
+        
             
 def get_str(prompt:str)->str:
     sys.stdout.write(prompt)
