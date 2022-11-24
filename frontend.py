@@ -1,11 +1,19 @@
 import sys
 import backend
 
-class FrontEndUI():    
+class FrontEndUI():
+    data_file = ""
+    initial_load = True
+        
     def __init__(self, frontend):
         self.__frontend = frontend
+        self.data_file = backend.BackEndManager.data_file
        
     def show_ui(self):
+        if FrontEndUI.initial_load:
+            FrontEndUI.load_file(self, file_name="")
+            FrontEndUI.initial_load = False
+
               
         menu = "\n=====================\n"
         menu += "BurgerJoint POS system\n"
@@ -60,11 +68,11 @@ class FrontEndUI():
         FrontEndUI.show_ui(self)
     
     def load_file(self, file_name:str)->str:
-        
+        file_name = backend.BackEndManager.data_file
         try:
-            backend.BackEndManager.data_file = open("", "r")
+            backend.BackEndManager.data_file = open("test.csv", "r")
             line = backend.BackEndManager.data_file.readline().strip()
-            while line != "":
+            while line != None:
                 fields = line.strip().split(",")
                 if len(fields) != 3:
                     raise ValueError("Incorrect number of values on line: " + str(line))
@@ -73,8 +81,10 @@ class FrontEndUI():
                     stock_amount = fields[1]
                     card_price = fields[2]
                     backend.BackEndManager.add_card(card_name, stock_amount, card_price)
+                    
+            backend.BackEndManager.data_file.close()
         except FileNotFoundError:
-            sys.stdout.write("File could not be found, a new file will be created.")
+            sys.stdout.write("\nData file could not be found, a new file will be created.\n")
             
 def get_str(prompt:str)->str:
     sys.stdout.write(prompt)
