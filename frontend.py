@@ -25,6 +25,11 @@ class FrontEndUI():
             sys.stdout.write("\n")
             if choice == "a":
                 FrontEndUI.add_item_via_menu(self)
+            elif choice == "d":
+                FrontEndUI.display_records(self)
+            else:
+                pass #add a save and exit function here
+                
         
     def add_item_via_menu(self):
         menu = ("-----------\n")
@@ -40,7 +45,19 @@ class FrontEndUI():
         sys.stdout.write("\n")
         backend.BackEndManager.add_card(card_name, stock_amount, card_price)
         FrontEndUI.show_ui(self)
-        
+    
+    def display_records(self):
+        if len(backend.BackEndManager.graphics_cards_inventory) == 0:
+            sys.stdout.write("Current file does not contain any records.\n")
+        else:
+            i = 0
+            while i < len(backend.BackEndManager.graphics_cards_inventory):
+                record = (backend.BackEndManager.graphics_cards_inventory[i].card_name + " ")
+                record += (str(backend.BackEndManager.graphics_cards_inventory[i].stock_amount) + " ")
+                record += (str(backend.BackEndManager.graphics_cards_inventory[i].card_price) + "\n")
+                sys.stdout.write(record)
+                i += 1
+        FrontEndUI.show_ui(self)
     
 def get_str(prompt:str)->str:
     sys.stdout.write(prompt)
