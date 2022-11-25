@@ -40,7 +40,7 @@ class FrontEndUI():
                 FrontEndUI.add_item_via_menu(self)
             elif choice == "d":
                 FrontEndUI.display_records(self)
-            else:
+            elif choice == "s":
                 try:
                     backend.BackEndManager.save_file(self)
                 except Exception as error:

@@ -4,6 +4,7 @@ class BackEndManager():
     graphics_cards_inventory = []
     data_file = ""
         
+        
     @staticmethod
     def add_card(card_name, stock_amount, card_price):
         gpu_item = GraphicsCard(card_name, stock_amount, card_price)
