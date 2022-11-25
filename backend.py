@@ -1,3 +1,4 @@
+import os
 
 class BackEndManager:
     graphics_cards_inventory = []
@@ -12,9 +13,9 @@ class BackEndManager:
         BackEndManager.graphics_cards_inventory.append(gpu_item)      
         
     def load_file(self, file_name:str)->str:
-        file_name = BackEndManager.data_file
+        file_name = str(BackEndManager.data_file)
+        file_object = open(file_name, "r")
         
-        BackEndManager.data_file = open(file_name, "r")
         i = 0
         line = BackEndManager.data_file.readline().strip()
         while line != "":
@@ -28,10 +29,10 @@ class BackEndManager:
                 BackEndManager.add_card(card_name, stock_amount, card_price)
             line = BackEndManager.data_file.readline().strip()
             i += 1           
-        BackEndManager.data_file.close()      
+        file_object.close()      
             
     def save_file(self):
-        file_name = BackEndManager.data_file
+        file_name = str(BackEndManager.data_file)
         
         file_object = open(file_name, "w")
         i = 0

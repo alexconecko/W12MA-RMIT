@@ -3,11 +3,13 @@ import backend
 
 class FrontEndUI():
     initial_load = True
-        
-    def __init__(self, __backend):
+    data_file = ""
+    
+    def __init__(self, data_file):
         self.__backend = backend.BackEndManager()
-        self.data_file = backend.BackEndManager.data_file
-       
+        self.__backend.data_file = data_file
+
+        
     def show_ui(self):
         if FrontEndUI.initial_load:
             try:
@@ -22,6 +24,7 @@ class FrontEndUI():
         menu += "===============================\n"
         menu += "[A]dd a product\n"
         menu += "[D]isplay saved data\n"
+        menu += "[S]ave data to file\n"
         menu += "E[x]it and save to file\n"
         
         sys.stdout.write(menu)
@@ -37,6 +40,11 @@ class FrontEndUI():
                 FrontEndUI.add_item_via_menu(self)
             elif choice == "d":
                 FrontEndUI.display_records(self)
+            else:
+                backend.BackEndManager.save_file(self)
+            
+        
+                
         
     def add_item_via_menu(self):
         menu = ("-----------\n")
