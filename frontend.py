@@ -41,7 +41,11 @@ class FrontEndUI():
             elif choice == "d":
                 FrontEndUI.display_records(self)
             else:
-                backend.BackEndManager.save_file(self)
+                try:
+                    backend.BackEndManager.save_file(self)
+                except Exception as error:
+                    choice = "x"
+                    sys.stdout.write(str(error))
             
         
                 

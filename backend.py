@@ -1,6 +1,6 @@
 import os
 
-class BackEndManager:
+class BackEndManager():
     graphics_cards_inventory = []
     data_file = ""
         
