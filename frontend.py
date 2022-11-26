@@ -2,31 +2,27 @@ import sys
 import backend
 
 class FrontEndUI():
-    data_file = ""
     initial_load = True
-        
+
     def __init__(self, __backend):
-        self.__backend = backend.BackEndManager()
-        self.data_file = backend.BackEndManager.data_file
-       
+        self.backend = __backend
+          
     def show_ui(self):
-        #try and except was not used here as I wanted there to only be 
-        #a single check for loading a file, instead we have try and except
-        #in the actual load file method. I had to do this because the application
-        #module makes call to show_ui and we also call it at the end of other 
-        #methods depending on user actions. I've done it this way because no messages
-        #other than "about to start program..." can be written out at program start
         if FrontEndUI.initial_load:
-            FrontEndUI.load_file(self, file_name="")
+            try:
+                backend.BackEndManager.load_file(self, file_name="")
+            except Exception as error:
+                sys.stdout.write(str(error))
             FrontEndUI.initial_load = False
 
               
-        menu = "\n===============================\n"
+        menu = "\n\n===============================\n"
         menu += "Graphics Card Inventory Manager\n"
         menu += "===============================\n"
         menu += "[A]dd a product\n"
         menu += "[D]isplay saved data\n"
-        menu += "E[x]it and save to file\n"
+        menu += "[S]ave data to file\n"
+        menu += "E[x]it program\n"
         
         sys.stdout.write(menu)
         
@@ -34,17 +30,19 @@ class FrontEndUI():
         choice = get_str("Enter choice: ").lower()
         while not "[" + choice + "]" in menu:
             choice = get_str((choice + " was an invalid choice! Re-enter: ")).lower()
-        
+          
         while choice != "x":
             sys.stdout.write("\n")
             if choice == "a":
                 FrontEndUI.add_item_via_menu(self)
             elif choice == "d":
                 FrontEndUI.display_records(self)
-            else:
+            elif choice == "s":
                 FrontEndUI.save_file(self)
+            else:
+                sys.exit()
                 
-        
+            
     def add_item_via_menu(self):
         menu = ("-----------\n")
         menu += ("Add an item\n")
@@ -53,7 +51,7 @@ class FrontEndUI():
 
         card_name = get_str("Enter item name: ")
         sys.stdout.write("\n")
-        stock_amount = get_int("Enter item servings amount: ")
+        stock_amount = get_int("Enter amount of items in stock: ")
         sys.stdout.write("\n")
         card_price = get_positive_float("Enter item price: $")
         sys.stdout.write("\n")
@@ -72,31 +70,23 @@ class FrontEndUI():
                 sys.stdout.write(record)
                 i += 1
         FrontEndUI.show_ui(self)
-    
-    def load_file(self, file_name:str)->str:
-        file_name = backend.BackEndManager.data_file
-        try:
-            backend.BackEndManager.data_file = open(file_name, "r")
-            i = 0
-            line = backend.BackEndManager.data_file.readline().strip()
-            while line != "":
-                fields = line.strip().split(",")
-                if len(fields) != 3:
-                    raise ValueError("Incorrect number of values on line: " + str(line))
-                else:
-                    card_name = fields[0]
-                    stock_amount = fields[1]
-                    card_price = fields[2]
-                    backend.BackEndManager.add_card(card_name, stock_amount, card_price)
-                line = backend.BackEndManager.data_file.readline().strip()
-                i += 1           
-            backend.BackEndManager.data_file.close()
-        except FileNotFoundError:
-            sys.stdout.write("\nData file could not be found, a new file will be created.\n")
-            
-    def save_file(self, file_name):
-        pass
         
+    def save_file(self):
+            try:
+                file_name = str(backend.BackEndManager.data_file)
+                    
+                file_object = open(file_name, "w")
+                i = 0
+                while i < len(backend.BackEndManager.graphics_cards_inventory):
+                    record = (backend.BackEndManager.graphics_cards_inventory[i].card_name + ",")
+                    record += (str(backend.BackEndManager.graphics_cards_inventory[i].stock_amount) + ",")
+                    record += (str(backend.BackEndManager.graphics_cards_inventory[i].card_price) + "\n")
+                    file_object.write(record)
+                    i += 1
+                file_object.close()
+            except Exception as error:
+                sys.stdout.write(str(error))
+            
             
 def get_str(prompt:str)->str:
     sys.stdout.write(prompt)
