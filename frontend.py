@@ -10,7 +10,12 @@ class FrontEndUI():
     #outputs for the end user to see and react to. Implementing the method
     #this way seperates the duties between frontend and backend. Alternatively,
     #I would have turned this method into just a function within this module.    
-    def show_ui(self):  
+    def show_ui(self):
+        try:
+            backend.BackEndManager.load_file()
+        except Exception as error:
+            sys.stdout.write(str(error))
+          
         choice = FrontEndUI.get_menu_choice(self)
         #this while loop ensures that provided the user does not input  "x"
         #the program will continue to display the menu, the if statements 
@@ -23,6 +28,12 @@ class FrontEndUI():
                 FrontEndUI.add_item_via_menu(self)
             elif choice == "d":
                 FrontEndUI.display_records(self)
+            else:
+                try:
+                    backend.BackEndManager.save_to_file()
+                except Exception as error:
+                    sys.stdout.write(str(error))
+                
             
             choice = FrontEndUI.get_menu_choice(self)
     
@@ -30,7 +41,7 @@ class FrontEndUI():
     #it also handles the initial choice that will lead the user to the different uses of the 
     #program, be it adding, displaying or saving records.
     def get_menu_choice(self):
-        menu = "\n===============================\n"
+        menu = "\n\n===============================\n"
         menu += "Graphics Card Inventory Manager\n"
         menu += "===============================\n"
         menu += "[A]dd a product\n"
