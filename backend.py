@@ -1,9 +1,7 @@
-import os
 
 class BackEndManager():
     graphics_cards_inventory = []
-    data_file = ""
-        
+    data_file = "" 
         
     @staticmethod
     def add_card(card_name, stock_amount, card_price):
@@ -30,21 +28,7 @@ class BackEndManager():
                 BackEndManager.add_card(card_name, stock_amount, card_price)
             line = BackEndManager.data_file.readline().strip()
             i += 1           
-        file_object.close()      
-            
-    def save_file(self):
-        file_name = str(BackEndManager.data_file)
-        
-        file_object = open(file_name, "w")
-        i = 0
-        while i < len(BackEndManager.graphics_cards_inventory):
-            record = (BackEndManager.graphics_cards_inventory[i].card_name + ",")
-            record += (str(BackEndManager.graphics_cards_inventory[i].stock_amount) + ",")
-            record += (str(BackEndManager.graphics_cards_inventory[i].card_price) + "\n")
-            file_object.write(record)
-            i += 1
-        file_object.close()
-        
+        file_object.close()              
             
 class GraphicsCard():
     __card_name = ""

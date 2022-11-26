@@ -3,13 +3,10 @@ import backend
 
 class FrontEndUI():
     initial_load = True
-    data_file = ""
-    
-    def __init__(self, data_file):
-        self.__backend = backend.BackEndManager()
-        self.__backend.data_file = data_file
 
-        
+    def __init__(self, __backend):
+        self.backend = __backend
+          
     def show_ui(self):
         if FrontEndUI.initial_load:
             try:
@@ -25,7 +22,7 @@ class FrontEndUI():
         menu += "[A]dd a product\n"
         menu += "[D]isplay saved data\n"
         menu += "[S]ave data to file\n"
-        menu += "E[x]it and save to file\n"
+        menu += "E[x]it program\n"
         
         sys.stdout.write(menu)
         
@@ -33,7 +30,7 @@ class FrontEndUI():
         choice = get_str("Enter choice: ").lower()
         while not "[" + choice + "]" in menu:
             choice = get_str((choice + " was an invalid choice! Re-enter: ")).lower()
-        
+          
         while choice != "x":
             sys.stdout.write("\n")
             if choice == "a":
@@ -41,15 +38,11 @@ class FrontEndUI():
             elif choice == "d":
                 FrontEndUI.display_records(self)
             elif choice == "s":
-                try:
-                    backend.BackEndManager.save_file(self)
-                except Exception as error:
-                    choice = "x"
-                    sys.stdout.write(str(error))
-            
-        
+                FrontEndUI.save_file(self)
+            else:
+                sys.exit()
                 
-        
+            
     def add_item_via_menu(self):
         menu = ("-----------\n")
         menu += ("Add an item\n")
@@ -78,6 +71,22 @@ class FrontEndUI():
                 i += 1
         FrontEndUI.show_ui(self)
         
+    def save_file(self):
+            try:
+                file_name = str(backend.BackEndManager.data_file)
+                    
+                file_object = open(file_name, "w")
+                i = 0
+                while i < len(backend.BackEndManager.graphics_cards_inventory):
+                    record = (backend.BackEndManager.graphics_cards_inventory[i].card_name + ",")
+                    record += (str(backend.BackEndManager.graphics_cards_inventory[i].stock_amount) + ",")
+                    record += (str(backend.BackEndManager.graphics_cards_inventory[i].card_price) + "\n")
+                    file_object.write(record)
+                    i += 1
+                file_object.close()
+            except Exception as error:
+                sys.stdout.write(str(error))
+            
             
 def get_str(prompt:str)->str:
     sys.stdout.write(prompt)
