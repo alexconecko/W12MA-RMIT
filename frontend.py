@@ -37,8 +37,15 @@ class FrontEndUI():
                 FrontEndUI.add_item_via_menu(self)
             elif choice == "d":
                 FrontEndUI.display_records(self)
+<<<<<<< HEAD
             elif choice == "s":
                 FrontEndUI.save_file(self)
+=======
+            else:
+                backend.BackEndManager.save_file(self)
+            
+        
+>>>>>>> parent of 0190109 (same as prior commit)
                 
             
     def add_item_via_menu(self):
