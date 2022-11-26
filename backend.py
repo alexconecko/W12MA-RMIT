@@ -1,7 +1,7 @@
 
 class BackEndManager:
     graphics_cards_inventory = []
-    data_file = "data.csv" 
+    data_file = ""
         
     @staticmethod
     def add_card(card_name, stock_amount, card_price):
@@ -9,9 +9,10 @@ class BackEndManager:
         gpu_item.card_name = card_name
         gpu_item.stock_amount = stock_amount
         gpu_item.card_price = card_price
-        BackEndManager.graphics_cards_inventory.append(gpu_item)      
-        
-    def load_file(self, file_name:str)->str:
+        BackEndManager.graphics_cards_inventory.append(gpu_item)
+    
+    @staticmethod    
+    def load_file():
         file_name = BackEndManager.data_file
         file_object = open(file_name, "r")
         
@@ -28,8 +29,23 @@ class BackEndManager:
                 BackEndManager.add_card(card_name, stock_amount, card_price)
             line = BackEndManager.data_file.readline().strip()
             i += 1           
-        file_object.close()              
+        file_object.close()                   
             
+    @staticmethod
+    def save_to_file():
+        file_name = BackEndManager.data_file
+        file_object = open(file_name, "w")
+        
+        i = 0
+        while i < len(BackEndManager.graphics_cards_inventory):
+            record = (BackEndManager.graphics_cards_inventory[i].card_name + ",")
+            record += (str(BackEndManager.graphics_cards_inventory[i].stock_amount) + ",")
+            record += (str(BackEndManager.graphics_cards_inventory[i].card_price) + "\n")
+            file_object.write(record)
+            i += 1
+        file_object.close()
+    
+    
 class GraphicsCard():
     __card_name = ""
     __stock_amount = 0
