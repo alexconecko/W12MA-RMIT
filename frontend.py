@@ -28,7 +28,7 @@ class FrontEndUI():
         
         menu = menu.lower()
         choice = get_str("Enter choice: ").lower()
-        while not "[" + choice + "]" in menu:
+        if not "[" + choice + "]" in menu:
             choice = get_str((choice + " was an invalid choice! Re-enter: ")).lower()
           
         while choice != "x":
@@ -39,8 +39,6 @@ class FrontEndUI():
                 FrontEndUI.display_records(self)
             elif choice == "s":
                 FrontEndUI.save_file(self)
-            else:
-                sys.exit()
                 
             
     def add_item_via_menu(self):
