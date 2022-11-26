@@ -2,60 +2,70 @@ import sys
 import backend
 
 class FrontEndUI():
-    initial_load = True
-
-    def __init__(self, __backend):
-        self.backend = __backend
-          
-    def show_ui(self):
-        if FrontEndUI.initial_load:
-            try:
-                backend.BackEndManager.load_file(self, file_name="")
-            except Exception as error:
-                sys.stdout.write(str(error))
-            FrontEndUI.initial_load = False
-
-              
-        menu = "\n\n===============================\n"
-        menu += "Graphics Card Inventory Manager\n"
-        menu += "===============================\n"
-        menu += "[A]dd a product\n"
-        menu += "[D]isplay saved data\n"
-        menu += "[S]ave data to file\n"
-        menu += "E[x]it program\n"
+    def __init__(self, app_backend):
+        self.app_backend = backend.BackEndManager()
         
-        sys.stdout.write(menu)
         
-        menu = menu.lower()
-        choice = get_str("Enter choice: ").lower()
-        if not "[" + choice + "]" in menu:
-            choice = get_str((choice + " was an invalid choice! Re-enter: ")).lower()
-          
+    #user interface method is created as the main method which will produce 
+    #outputs for the end user to see and react to. Implementing the method
+    #this way seperates the duties between frontend and backend. Alternatively,
+    #I would have turned this method into just a function within this module.    
+    def show_ui(self):  
+        choice = FrontEndUI.get_menu_choice(self)
+        #this while loop ensures that provided the user does not input  "x"
+        #the program will continue to display the menu, the if statements 
+        #lead to the different methods that the user can use for different 
+        #uses within the program. Alternatively I could have used a bool in
+        #the loop but this way is more cohesive with the rest of the program.
         while choice != "x":
             sys.stdout.write("\n")
             if choice == "a":
                 FrontEndUI.add_item_via_menu(self)
             elif choice == "d":
                 FrontEndUI.display_records(self)
-            elif choice == "s":
-                FrontEndUI.save_file(self)
-                
             
-    def add_item_via_menu(self):
-        menu = ("-----------\n")
-        menu += ("Add an item\n")
-        menu += ("-----------\n")
+            choice = FrontEndUI.get_menu_choice(self)
+    
+    #this method holds the menu UI that the user will see when they start the program,
+    #it also handles the initial choice that will lead the user to the different uses of the 
+    #program, be it adding, displaying or saving records.
+    def get_menu_choice(self):
+        menu = "\n===============================\n"
+        menu += "Graphics Card Inventory Manager\n"
+        menu += "===============================\n"
+        menu += "[A]dd a product\n"
+        menu += "[D]isplay saved data\n"
+        menu += "E[x]it and save to file\n"
+        
         sys.stdout.write(menu)
+        
+        menu = menu.lower()
+        choice = get_str("Enter choice: ").lower()
+        while not "[" + choice + "]" in menu:
+            choice = get_str((choice + " was an invalid choice! Re-enter: ")).lower()
+        
+        return choice
+    
+    #this method is called when the user chooses to add a product from the UI.
+    #it assigns different data types to attributes in order to be used in the 
+    #backend_operations class. The attributes are named the same as the paramters
+    #in the add_card method which allows it to be assigned to attributes within the
+    #graphics card objects that are being created, they can then be appended to the 
+    #list of graphics_cards in backend_operations class as well as be used to display
+    #and write to file when using the save_data method
+    def add_item_via_menu(self):
+        sys.stdout.write("-----------\n")
+        sys.stdout.write("Add an item\n")
+        sys.stdout.write("-----------\n")
 
-        card_name = get_str("Enter item name: ")
+        card_name = get_str("Enter product name: ")
         sys.stdout.write("\n")
-        stock_amount = get_int("Enter amount of items in stock: ")
+        stock_amount = get_int("How many units are in stock?: ")
         sys.stdout.write("\n")
-        card_price = get_positive_float("Enter item price: $")
+        card_price = get_positive_float("Enter product price: $")
         sys.stdout.write("\n")
         backend.BackEndManager.add_card(card_name, stock_amount, card_price)
-        FrontEndUI.show_ui(self)
-    
+        
     def display_records(self):
         if len(backend.BackEndManager.graphics_cards_inventory) == 0:
             sys.stdout.write("Current file does not contain any records.\n")
@@ -66,25 +76,7 @@ class FrontEndUI():
                 record += (str(backend.BackEndManager.graphics_cards_inventory[i].stock_amount) + " ")
                 record += (str(backend.BackEndManager.graphics_cards_inventory[i].card_price) + "\n")
                 sys.stdout.write(record)
-                i += 1
-        FrontEndUI.show_ui(self)
-        
-    def save_file(self):
-            try:
-                file_name = str(backend.BackEndManager.data_file)
-                    
-                file_object = open(file_name, "w")
-                i = 0
-                while i < len(backend.BackEndManager.graphics_cards_inventory):
-                    record = (backend.BackEndManager.graphics_cards_inventory[i].card_name + ",")
-                    record += (str(backend.BackEndManager.graphics_cards_inventory[i].stock_amount) + ",")
-                    record += (str(backend.BackEndManager.graphics_cards_inventory[i].card_price) + "\n")
-                    file_object.write(record)
-                    i += 1
-                file_object.close()
-            except Exception as error:
-                sys.stdout.write(str(error))
-            
+                i += 1 
             
 def get_str(prompt:str)->str:
     sys.stdout.write(prompt)
