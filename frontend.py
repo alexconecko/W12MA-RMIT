@@ -5,17 +5,8 @@ class FrontEndUI():
     initial_load = True
 
     def __init__(self, __backend):
-<<<<<<< HEAD
         self.backend = __backend
           
-=======
-        self.__backend = backend.BackEndManager()
-        self.data_file = backend.BackEndManager.data_file
-        
-        try:
-            self.__backend.load
-       
->>>>>>> parent of c55a824 (stable, no loading or saving)
     def show_ui(self):
         if FrontEndUI.initial_load:
             try:

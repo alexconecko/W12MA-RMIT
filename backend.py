@@ -1,7 +1,7 @@
 
 class BackEndManager:
     graphics_cards_inventory = []
-    data_file = "" 
+    data_file = "data.csv" 
         
     @staticmethod
     def add_card(card_name, stock_amount, card_price):
@@ -12,7 +12,7 @@ class BackEndManager:
         BackEndManager.graphics_cards_inventory.append(gpu_item)      
         
     def load_file(self, file_name:str)->str:
-        file_name = str(BackEndManager.data_file)
+        file_name = BackEndManager.data_file
         file_object = open(file_name, "r")
         
         i = 0
