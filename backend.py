@@ -13,20 +13,16 @@ class BackEndManager:
     
     @staticmethod    
     def load_file():
-        file_name = BackEndManager.data_file
-        file_object = open(file_name, "r")
+        file_object = open(BackEndManager.data_file, "r")
         
         i = 0
-        line = BackEndManager.data_file.readline().strip()
+        line = file_object.readline().strip()
         while line != "":
             fields = line.strip().split(",")
-            if len(fields) != 3:
-                raise ValueError("Incorrect number of values on line: " + str(line))
-            else:
-                card_name = fields[0]
-                stock_amount = fields[1]
-                card_price = fields[2]
-                BackEndManager.add_card(card_name, stock_amount, card_price)
+            card_name = fields[0]
+            stock_amount = fields[1]
+            card_price = fields[2]
+            BackEndManager.add_card(card_name, stock_amount, card_price)
             line = BackEndManager.data_file.readline().strip()
             i += 1           
         file_object.close()                   

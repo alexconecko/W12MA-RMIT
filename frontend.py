@@ -5,7 +5,6 @@ class FrontEndUI():
     def __init__(self, app_backend):
         self.app_backend = backend.BackEndManager()
         
-        
     #user interface method is created as the main method which will produce 
     #outputs for the end user to see and react to. Implementing the method
     #this way seperates the duties between frontend and backend. Alternatively,
@@ -28,7 +27,7 @@ class FrontEndUI():
                 FrontEndUI.add_item_via_menu(self)
             elif choice == "d":
                 FrontEndUI.display_records(self)
-            else:
+            elif choice == "x":
                 try:
                     backend.BackEndManager.save_to_file()
                 except Exception as error:
